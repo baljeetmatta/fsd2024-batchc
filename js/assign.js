@@ -89,6 +89,7 @@ task.addEventListener("keypress", function (e) {
         obj.taskid = id;
         id++;
         tasks.push(obj);
+        setLocalStorage();
 
         task.value = "";
         addToDom(obj);
@@ -130,22 +131,102 @@ function addToDom(task) {
 
 
 
-      tasks=  tasks.map(function(item){
-        if(item.taskid==task.taskid)
-            item.status=status;
+        tasks = tasks.map(function (item) {
+            if (item.taskid == task.taskid)
+                item.status = status;
 
-        return item;
-      })
-      console.log(tasks);
-      
+            return item;
+        })
+        setLocalStorage();
+        console.log(tasks);
+
 
     })
 
+    let delbtn = document.createElement("button");
+    delbtn.innerText = "del";
+    // delbtn.addEventListener("click",function(){
+    //     taskdiv.remove();
+    //     tasks=tasks.filter(function(item){
+    //         if(item.taskid!=task.taskid)
+    //             return true;
+
+    //     })
+    //     console.log(tasks);
+
+    // })
+    delbtn.addEventListener("click", delHandler);
+
     taskdiv.append(span);
     taskdiv.append(chk);
+    taskdiv.append(delbtn);
+
 
     taskList.append(taskdiv);
 
 
 
 }
+function delHandler(e) {
+    let parent = e.target.parentNode;
+    let id = parent.getAttribute("id");
+    parent.remove();
+    tasks = tasks.filter(function (item) {
+        if (item.taskid != id)
+            return true;
+
+    })
+    setLocalStorage();
+    console.log(tasks);
+
+
+
+}
+
+function setLocalStorage() {
+
+    localStorage.setItem("tasks",JSON.stringify(tasks));
+
+    //let arr=["one","Two"];
+    //document.write(arr);
+    // localStorage.setItem("items",arr);
+
+    // let arr = [];
+    // let obj = {};
+    // obj.title = "test";
+    // arr.push(obj);
+    // //    document.write(arr);
+    // //    localStorage.setItem("items",arr);
+    // localStorage.setItem("items", JSON.stringify(arr));
+
+    // // let obj={};
+    // // obj.title="Test";
+    // // document.write(JSON.stringify(obj));
+    // let str = JSON.parse(localStorage.getItem("items"));
+
+    // console.log(str[0]);
+
+
+
+
+
+
+    // let name="Code";
+    //localStorage.setItem("name",name);
+
+}
+//setLocalStorage();
+function getLocalStorage()
+{
+    //tasks=JSON.parse(localStorage.getItem("tasks"));
+    if(localStorage.getItem("tasks"))
+        tasks=JSON.parse(localStorage.getItem("tasks"));
+
+    tasks.forEach(function(item){
+        addToDom(item);
+        
+    })
+    console.log(tasks);
+
+}
+getLocalStorage();
